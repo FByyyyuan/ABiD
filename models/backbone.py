@@ -11,9 +11,9 @@ class InvalidDatasetSelection(BaseException):
 class InvalidBackboneError(BaseException):
     """Raised when the choice of backbone Convnet is invalid."""
 
-check_dict = {"tiny": "/home/mayuan1/FB-code/cuda4/cuda1/params/convnext_tiny_22k_224.pth",
-            "small":"/home/mayuan1/FB-code/cuda4/cuda1/params/convnext_small_22k_224.pth",
-            "base":"/home/mayuan1/FB-code/cuda4/cuda1/params/convnext_tiny_22k_224.pth"}
+check_dict = {"tiny": "../params/convnext_tiny_22k_224.pth",
+            "small":"../params/convnext_small_22k_224.pth",
+            "base":"../params/convnext_base_22k_224.pth"}
 
 class BACKBONE_ABiD(nn.Module):
     def __init__(self, base_model,out_dim):
