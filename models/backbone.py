@@ -28,9 +28,9 @@ class BACKBONE_ABiD(nn.Module):
             dim_mlp = self.backbone.fc.in_features
             self.backbone.fc = nn.Sequential(nn.Linear(dim_mlp, dim_mlp), nn.ReLU(), self.backbone.fc)
         else:
-            self.resnet_dict1 = {"ConvneXt_small":create_model("convnext_small", pretrained=True,checkpoint_path='/home/mayuan1/FB-code/cuda4/cuda1/params/convnext_small_22k_224.pth',strict=False,num_classes=self.out_dim),
-                                "ConvneXt_tiny":create_model("convnext_tiny",pretrained=True,checkpoint_path='/home/mayuan1/FB-code/cuda4/cuda1/params/convnext_tiny_22k_224.pth',strict=False,num_classes=self.out_dim),
-                                "ConvneXt_base":create_model("convnext_base",pretrained=True,checkpoint_path='/home/mayuan1/FB-code/cuda4/cuda1/params/convnext_tiny_22k_224.pth',strict=False,num_classes=self.out_dim),}
+            self.resnet_dict1 = {"ConvneXt_small":create_model("convnext_small", pretrained=True,checkpoint_path='../params/convnext_small_22k_224.pth',strict=False,num_classes=self.out_dim),
+                                "ConvneXt_tiny":create_model("convnext_tiny",pretrained=True,checkpoint_path='../params/convnext_tiny_22k_224.pth',strict=False,num_classes=self.out_dim),
+                                "ConvneXt_base":create_model("convnext_base",pretrained=True,checkpoint_path='../params/convnext_tiny_22k_224.pth',strict=False,num_classes=self.out_dim)}
             self.backbone = self._get_basemodel(base_model)
 
     def _get_basemodel(self, model_name):
