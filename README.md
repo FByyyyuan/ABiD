@@ -19,6 +19,11 @@ python run.py
 
 ## Result on Toy dataset
 
-`train.py` script conducts multiple leave-one-out cross-validations for all target domain.
+Visualizations of comparisons of decision boundaries on balanced and imbalanced inter-twining moons datasets. 
+
+For the balanced dataset, in both the source and target domains, each class has 100 instances.
+For the imbalanced dataset, we designed the dataset based on the specific characteristics of GSDA: the source domain consists of two classes with sample sizes of 300 and 30, while the target domain comprises two classes with sample sizes of 100 and 50, respectively. The balanced and imbalanced datasets used the same model configuration.
+
+The purple dots represent the target domain data, and the red and blue dots represent the source data points belonging to classes 1 and 2, respectively.
 
 ![toydataset](https://github.com/FByyyyuan/ABiD/assets/70693257/a1a6a9d0-aa79-454b-a5cf-c5fc3e50753c)
