@@ -49,8 +49,8 @@ class ABiD(object):
         self.classnum = 5
         self.C1 = Classifier(class_num=self.classnum).to(self.args.device)
         self.C2 = Classifier(class_num=self.classnum).to(self.args.device)
-        self.opt_c1 = optim.Adam(self.C1.parameters(),lr=0.001, weight_decay=0.0005)#0.001目前best
-        self.opt_c2 = optim.Adam(self.C2.parameters(),lr=0.001, weight_decay=0.0005)#0.001目前best
+        self.opt_c1 = optim.Adam(self.C1.parameters(),lr=0.001, weight_decay=0.0005)
+        self.opt_c2 = optim.Adam(self.C2.parameters(),lr=0.001, weight_decay=0.0005)
         self.pred_adj = []
         super(ABiD, self).__init__()
 
