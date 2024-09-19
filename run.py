@@ -7,7 +7,7 @@ from torchvision import models
 from models.backbone import BACKBONE_ABiD
 from abid import ABiD
 from torch.utils.data import DataLoader
-from data_loader.dataloader import read_split_data,SourceDataset,TargetDataset
+from data_loader.dataloader import SourceDataset,TargetDataset,read_split_data_T
 import numpy as np
 
 model_names = sorted(name for name in models.__dict__
@@ -61,18 +61,19 @@ def main():
     else:
         args.device = torch.device('cpu')
     
-    train_dataset, val = read_split_data(args.root,ratio=args.ratio)
-    target_dataset, _ = read_split_data(args.tarroot,ratio=0)
+    train_dataset, val = read_split_data_T(args.root,ratio=args.ratio)
+    target_dataset, _ = read_split_data_T(args.tarroot,ratio=0)
 
     if args.ratio == 0 and args.val:
-        val_dataset, _ =  read_split_data(args.valroot,ratio=args.ratio)
-        val = DataLoader(TargetDataset(val_dataset,args=args), batch_size=2*args.batch_size,shuffle=False)
+        val_dataset, _ =  read_split_data_T(args.valroot,ratio=args.ratio)
+        val = DataLoader(TargetDataset(val_dataset,args=args,resolution=args.resolution,root=args.tarroot,target=args.train), batch_size=args.batch_size,shuffle=False)
     elif args.ratio != 0:
-        val = DataLoader(TargetDataset(val,args=args), batch_size=2*args.batch_size,shuffle=False)
+        val = DataLoader(TargetDataset(val,args=args,resolution=args.resolution,root=args.tarroot,target=args.train), batch_size=args.batch_size,shuffle=False)
     
     train_loader = DataLoader(SourceDataset(train_dataset,args.root,resolution=args.resolution,tarpath=target_dataset), batch_size=args.batch_size, shuffle=True,num_workers=args.workers, pin_memory=True, drop_last=True)
-    target_loader = DataLoader(TargetDataset(target_dataset,args=args,resolution=args.resolution), batch_size=args.batch_size,shuffle=True)
-    target_test_loader = DataLoader(TargetDataset(target_dataset,args=args,resolution = args.resolution), batch_size=args.batch_size,shuffle=False)
+    target_loader = DataLoader(TargetDataset(target_dataset,args=args,resolution=args.resolution,root=args.tarroot,target=args.train), batch_size=args.batch_size,shuffle=True)
+    target_test_loader = DataLoader(TargetDataset(target_dataset,args=args,resolution=args.resolution,root=args.tarroot,target=args.train), batch_size=args.batch_size,shuffle=False)
+    
 
     model = BACKBONE_ABiD(base_model=args.arch, out_dim=args.out_dim)
     optimizer = torch.optim.Adam(model.parameters(), args.lr, weight_decay=args.weight_decay)
