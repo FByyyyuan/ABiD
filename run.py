@@ -21,7 +21,9 @@ parser.add_argument('-weightpath', metavar='DIR', default='../params/weightpath.
 parser.add_argument('-classifier1path', metavar='DIR', default='../params/classifier1.pth', help='path to classifier1 weight path')
 parser.add_argument('-classifier2path', metavar='DIR', default='../params/classifier2.pth', help='path to classifier2 weight path')
 parser.add_argument('--target', default='T', help='select target domain')
-parser.add_argument('--mu', default=0.5, type=float, help='Hyperparameter mu')
+parser.add_argument('--train', default='D4-train',help='select target domain')
+parser.add_argument('--test', default='D4-test',help='select target domain')
+parser.add_argument('--mu', default=0.5, type=float,help='Hyperparameter mu')
 parser.add_argument('--txtlog', default='../runs/log.txt',help='recoded by txt') 
 parser.add_argument('--val', default=False, type=bool, help='seed for initializing training.')
 parser.add_argument('-a', '--arch', metavar='ARCH', default='ConvneXt_tiny',
@@ -72,7 +74,7 @@ def main():
     
     train_loader = DataLoader(SourceDataset(train_dataset,args.root,resolution=args.resolution,tarpath=target_dataset), batch_size=args.batch_size, shuffle=True,num_workers=args.workers, pin_memory=True, drop_last=True)
     target_loader = DataLoader(TargetDataset(target_dataset,args=args,resolution=args.resolution,root=args.tarroot,target=args.train), batch_size=args.batch_size,shuffle=True)
-    target_test_loader = DataLoader(TargetDataset(target_dataset,args=args,resolution=args.resolution,root=args.tarroot,target=args.train), batch_size=args.batch_size,shuffle=False)
+    target_test_loader = DataLoader(TargetDataset(target_dataset,args=args,resolution=args.resolution,root=args.tarroot,target=args.test), batch_size=args.batch_size,shuffle=False)
     
 
     model = BACKBONE_ABiD(base_model=args.arch, out_dim=args.out_dim)
