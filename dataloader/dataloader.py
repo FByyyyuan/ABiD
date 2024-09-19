@@ -1,10 +1,14 @@
+from cProfile import label
+from email.mime import image
+from re import M
 from torchvision.transforms import transforms
 import os
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset,DataLoader
 from PIL import Image
 import torch
 import random
 import numpy as np
+import torch
 from torch import nn
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -24,6 +28,19 @@ class RandomApply(nn.Module):
 def expand_greyscale(t):
     return t.expand(3, -1, -1)
 
+def read_split_data_T(root:str, ratio=0):
+    dataset_path = []
+    val= []
+    if True:
+        class_list = [c for c in  os.listdir(root) if os.path.isdir(os.path.join(root,c))]
+        class_list.sort()
+        for c in class_list: 
+                cla_path = os.path.join(root,c)
+                images = [os.path.join(root, c,i) for i in os.listdir(cla_path)]
+                for img_path  in images:
+                    dataset_path.append(img_path)
+    return dataset_path,val
+
 def center(path,resolution_r):
     img = Image.open(path).convert('RGB')
     transform = transforms.Compose([transforms.Resize((resolution_r,resolution_r)),
@@ -40,7 +57,8 @@ def center_Aug(path,resolution_r):
                                     transforms.RandomGrayscale(p=0.2),
                                     transforms.RandomHorizontalFlip(),
                                     RandomApply(transforms.GaussianBlur((3, 3), (1.0, 2.0)), p = 0.4),
-                                    transforms.RandomResizedCrop(size=(resolution_r,resolution_r ),scale=(0.75,1))])
+                                    transforms.RandomResizedCrop(size=(resolution_r,resolution_r ),scale=(0.75,1)),
+                                    ])
     img = transform(img)
     return img
 
@@ -50,6 +68,7 @@ def center_TarTest(path,resolution_r):
                                     transforms.ToTensor(),])
     img = transform(img)
     return img
+
     
 class GaussianBlur(object):
     def __init__(self, kernel_size):
@@ -86,29 +105,6 @@ class GaussianBlur(object):
         img = self.tensor_to_pil(img)
         return img
 
-def read_split_data(root:str, ratio=0):
-    domain_list = [c for c in  os.listdir(root) if os.path.isdir(os.path.join(root,c))]
-    domain_list.sort()
-    root1 = os.path.join(root,domain_list[0])
-    class_list = [c for c in  os.listdir(root1) if os.path.isdir(os.path.join(root1,c))]
-    class_list.sort()
-    dataset_path = []
-    val= []
-    for domain_d in domain_list:
-        for c in class_list: 
-            cla_path = os.path.join(root,domain_d,c)
-            images = [os.path.join(root, domain_d, c,i) for i in os.listdir(cla_path)]
-            for img_path  in images:
-                dataset_path.append(img_path)
-    if ratio == 0:
-        return dataset_path,val
-    else:
-        n_total = len(dataset_path)
-        offset = int(n_total * ratio)
-        random.shuffle(dataset_path)
-        val = dataset_path[:offset]
-        train = dataset_path[offset:]
-        return train, val
 
 class SourceDataset(Dataset):
     def __init__(self,path,root,resolution,tarpath):        
@@ -139,17 +135,18 @@ class SourceDataset(Dataset):
         img_pos_path = random.sample(pos_images, k=1)[0]
         image_anchor = center_TarTest(image_path,resolution_r=self.resolution)
         image_positive = center_TarTest(img_pos_path,resolution_r=self.resolution)
+
         train_domain = self.domain_list.index(train_domain)
         train_label = self.class_list.index(train_label)
 
         return image_anchor,image_positive,train_label,train_domain,pos_domain
 
 class TargetDataset(Dataset):
-    def __init__(self,tarpath,args,resolution):  
+    def __init__(self,tarpath,args,resolution,root,target):  
         self.tarpath = tarpath
-        self.root = args.tarroot
-        self.tar = args.target
+        self.root = root
         self.resolution = resolution
+        self.tar = target
         root1 = os.path.join(self.root,self.tar)
         self.class_list = [c for c in  os.listdir(root1) if os.path.isdir(os.path.join(root1,c))]
         self.class_list.sort()
@@ -158,6 +155,7 @@ class TargetDataset(Dataset):
         return len(self.tarpath)
 
     def __getitem__(self, index): 
+        
         tar_path = os.path.join(self.tarpath[index])
         tar_label = tar_path.split('/')[-2]
         tar_image = center_TarTest(tar_path,resolution_r=self.resolution)
