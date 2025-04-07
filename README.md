@@ -31,3 +31,20 @@ For the imbalanced dataset, we designed the dataset based on the specific charac
 The purple dots represent the target domain data, and the red and blue dots represent the source data points belonging to classes 1 and 2, respectively.
 
 ![toydataset](https://github.com/FByyyyuan/ABiD/assets/70693257/a1a6a9d0-aa79-454b-a5cf-c5fc3e50753c)
+
+### Citation
+
+If you find this code useful for your research, we would appreciate it if you could cite our paper as follows:
+
+BibTeX:
+```bash
+@ARTICLE{10731841,
+  author={Ma, Yuan and Gu, Yang and Guo, Shuai and Qin, Xin and Wen, Shijie and Shi, Nianfeng and Dai, Weiwei and Chen, Yiqiang},
+  journal={IEEE Transactions on Medical Imaging}, 
+  title={Grade-Skewed Domain Adaptation via Asymmetric Bi-Classifier Discrepancy Minimization for Diabetic Retinopathy Grading}, 
+  year={2025},
+  volume={44},
+  number={3},
+  pages={1115-1126},
+  doi={10.1109/TMI.2024.3485064}}
+```
