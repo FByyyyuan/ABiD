@@ -30,7 +30,7 @@ For the imbalanced dataset, we designed the dataset based on the specific charac
 
 The purple dots represent the target domain data, and the red and blue dots represent the source data points belonging to classes 1 and 2, respectively.
 
-![toydataset](https://github.com/FByyyyuan/ABiD/assets/70693257/a1a6a9d0-aa79-454b-a5cf-c5fc3e50753c)
+![toydataset](https://github.com/user-attachments/assets/aaa81e96-446b-46b3-b1b8-1f92b529af64)
 
 ### Citation
 
